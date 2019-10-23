@@ -1,4 +1,4 @@
-package com.samvel1024;
+package com.attachme.plugin;
 
 
 import java.io.IOException;

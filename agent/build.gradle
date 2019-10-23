@@ -1,0 +1,23 @@
+plugins {
+    id 'java'
+}
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+jar {
+    archiveFileName = "agent.jar"
+    manifest {
+        attributes(
+                'Premain-Class': 'com.attachme.agent.Agent',
+                'Can-Redefine-Classes': 'true',
+                'Can-Retransform-Classes': 'true',
+                'Can-Set-Native-Method-Prefix': 'true',
+                'Implementation-Title': "ClassLogger",
+                'Implementation-Version': rootProject.version
+        )
+    }
+}

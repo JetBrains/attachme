@@ -1,32 +1,9 @@
-plugins {
-    id 'java'
-}
 
-group 'com.samvel1024'
-version '1.0-SNAPSHOT'
+allprojects {
+    group 'com.attachme'
+    version '1.0-SNAPSHOT'
 
-sourceCompatibility = 1.8
-
-repositories {
-    mavenCentral()
-}
-
-dependencies {
-    testCompile group: 'junit', name: 'junit', version: '4.12'
-    implementation 'com.google.code.gson:gson:2.8.6'
-
-}
-
-jar {
-    archiveFileName = "agent.jar"
-    manifest {
-        attributes(
-                'Premain-Class': 'com.samvel1024.Agent',
-                'Can-Redefine-Classes': 'true',
-                'Can-Retransform-Classes': 'true',
-                'Can-Set-Native-Method-Prefix': 'true',
-                'Implementation-Title': "ClassLogger",
-                'Implementation-Version': rootProject.version
-        )
+    repositories {
+        mavenCentral()
     }
 }

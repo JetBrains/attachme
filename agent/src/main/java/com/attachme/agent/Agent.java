@@ -1,8 +1,9 @@
-package com.samvel1024;
+package com.attachme.agent;
 
 import java.io.*;
 import java.lang.instrument.Instrumentation;
 import java.util.Objects;
+import java.util.Scanner;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -28,7 +29,7 @@ public class Agent {
 			BufferedWriter procInput = new BufferedWriter(new OutputStreamWriter(proc.getOutputStream()));
 			String line = null;
 			while ((line = script.readLine()) != null) {
-				procInput.write(line);
+				procInput.write(line + System.lineSeparator());
 			}
 			procInput.close();
 		}
@@ -39,9 +40,14 @@ public class Agent {
 				.redirectErrorStream(true)
 				.start();
 			pipeScript(python);
+			BufferedReader script = new BufferedReader(new InputStreamReader(python.getInputStream()));
+			Scanner sc = new Scanner(script);
+			while(sc.hasNext()){
+				System.err.println("[python] " + sc.nextLine());
+			}
 			python.waitFor();
 			if (python.exitValue() != 0) {
-				throw new RuntimeException("The python subprocess exited with error");
+				throw new RuntimeException("The python subprocess exited with error code " + python.exitValue());
 			}
 		}
 	}
