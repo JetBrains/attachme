@@ -2,11 +2,14 @@
     <id>com.attachme.plugin</id>
     <name>Attachme</name>
     <vendor email="samvel1024@gmail.com">Samvel Abrahamyan</vendor>
+    <depends>com.intellij.modules.java</depends>
 
     <description>A plugin for auto attaching InttelliJ debugger to java processes</description>
 
-    <actions>
-        <action id="com.attachme.plugin.Action" class="com.attachme.plugin.Action" text="Smehsn"/>
-    </actions>
+    <extensions defaultExtensionNs="com.intellij">
+        <configurationType implementation="com.attachme.plugin.run.AttachmeRunConfType"/>
+    </extensions>
+
+    <xdebugger.localAttachDebuggerProvider implementation="com.attachme.plugin.attach.AttachmeAttachDebuggerProvider"/>
 
 </idea-plugin>

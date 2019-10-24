@@ -7,11 +7,10 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
 import java.util.Scanner;
-import java.util.function.Consumer;
 
 public class AttachmeRegistry implements Runnable {
 
-	public static Thread makeThread(int port, Consumer<ProcessRegisterMsg> listener, Console console) {
+	public static Thread makeThread(int port, Listener listener, Console console) {
 		Thread thread = new Thread(new AttachmeRegistry(port, listener, console));
 		thread.setDaemon(true);
 		thread.setName("AttachmeListener");
@@ -20,7 +19,12 @@ public class AttachmeRegistry implements Runnable {
 
 	static final Gson gson = new Gson();
 
-	interface Console {
+	public interface Listener {
+		void onDebuggeeProcess(ProcessRegisterMsg msg);
+		void onFinished();
+	}
+
+	public interface Console {
 		void info(String str);
 
 		void error(String str);
@@ -39,10 +43,10 @@ public class AttachmeRegistry implements Runnable {
 	}
 
 	final int port;
-	final Consumer<ProcessRegisterMsg> listener;
+	final Listener listener;
 	final Console log;
 
-	public AttachmeRegistry(int port, Consumer<ProcessRegisterMsg> listener, Console console) {
+	public AttachmeRegistry(int port, Listener listener, Console console) {
 		this.port = port;
 		this.listener = listener;
 		this.log = console;
@@ -67,7 +71,7 @@ public class AttachmeRegistry implements Runnable {
 					try {
 						Scanner s = new Scanner(accept.getInputStream()).useDelimiter("\\A");
 						ProcessRegisterMsg msg = gson.fromJson(s.next(), ProcessRegisterMsg.class);
-						listener.accept(msg);
+						listener.onDebuggeeProcess(msg);
 						this.log.info("Registered a debuggee process with pid " + msg.getPid() + " and possible ports " + msg.getPorts().toString());
 					} catch (RuntimeException e) {
 						e.printStackTrace();
@@ -77,6 +81,7 @@ public class AttachmeRegistry implements Runnable {
 				}
 			}
 			this.log.info("Stopping attachme");
+			listener.onFinished();
 		}
 	}
 
