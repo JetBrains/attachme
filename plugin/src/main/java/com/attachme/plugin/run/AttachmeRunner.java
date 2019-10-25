@@ -6,6 +6,7 @@ import com.intellij.execution.DefaultExecutionResult;
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.ExecutionResult;
 import com.intellij.execution.Executor;
+import com.intellij.execution.configurations.RemoteConnection;
 import com.intellij.execution.configurations.RunProfileState;
 import com.intellij.execution.impl.ConsoleViewImpl;
 import com.intellij.execution.process.ProcessHandler;
@@ -49,6 +50,12 @@ public class AttachmeRunner implements RunProfileState, AttachmeRegistry.Listene
 
 	@Override
 	public void onDebuggeeProcess(ProcessRegisterMsg msg) {
+		if (msg.getPorts().isEmpty()) {
+			procHandler.notifyTextAvailable("Receieved message with no ports", ProcessOutputType.STDERR);
+			return;
+		}
+		RemoteConnection config = new RemoteConnection(true, "localhost", msg.getPorts().get(0) + "", false);
+		AttachmeDebugger.attach(project, config, msg.getPid());
 	}
 
 	@Override

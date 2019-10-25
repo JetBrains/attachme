@@ -10,6 +10,10 @@
         <configurationType implementation="com.attachme.plugin.run.AttachmeRunConfType"/>
     </extensions>
 
-    <xdebugger.localAttachDebuggerProvider implementation="com.attachme.plugin.attach.AttachmeAttachDebuggerProvider"/>
+    <extensions defaultExtensionNs="com.intellij">
+        <programRunner
+                implementation="com.attachme.plugin.run.AttachmeDebugger$ProcessAttachDebuggerRunner"
+                order="last"/>
+    </extensions>
 
 </idea-plugin>
