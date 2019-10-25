@@ -21,6 +21,13 @@ public class AttachmeDebugger {
 	private AttachmeDebugger() {
 	}
 
+	public static void attach(Project project, RemoteConnection con, Integer pid) {
+		RunnerAndConfigurationSettings runSettings =
+			RunManager.getInstance(project).createConfiguration("Attachme pid: " + pid, ProcessAttachRunConfigurationType.FACTORY);
+		((ProcessAttachRunConfiguration) runSettings.getConfiguration()).connection = con;
+		ProgramRunnerUtil.executeConfiguration(runSettings, new ProcessAttachDebugExecutor());
+	}
+
 	public static class ProcessAttachDebugExecutor extends DefaultDebugExecutor {
 		@NotNull
 		@Override
@@ -113,12 +120,5 @@ public class AttachmeDebugger {
 		public String getHelpTopic() {
 			return "reference.dialogs.rundebug.ProcessAttachRunConfigurationType";
 		}
-	}
-
-	public static void attach(Project project, RemoteConnection con, Integer pid) {
-		RunnerAndConfigurationSettings runSettings =
-			RunManager.getInstance(project).createConfiguration("Attachme pid: " + pid, ProcessAttachRunConfigurationType.FACTORY);
-		((ProcessAttachRunConfiguration) runSettings.getConfiguration()).connection = con;
-		ProgramRunnerUtil.executeConfiguration(runSettings, new ProcessAttachDebugExecutor());
 	}
 }

@@ -1,0 +1,14 @@
+[*.java]
+indent_style = space
+indent_size = 2
+charset = utf-8
+trim_trailing_whitespace = true
+insert_final_newline = true
+ij_continuation_indent_size = 2
+ij_java_align_multiline_parameters = true
+ij_java_align_multiline_parameters_in_calls = true
+ij_java_blank_lines_around_field = 1
+ij_java_blank_lines_around_method = 1
+ij_java_blank_lines_around_method_in_interface = 0
+ij_java_blank_lines_around_class = 1
+

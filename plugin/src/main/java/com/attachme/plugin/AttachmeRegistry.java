@@ -10,38 +10,7 @@ import java.util.Scanner;
 
 public class AttachmeRegistry implements Runnable {
 
-	public static Thread makeThread(int port, Listener listener, Console console) {
-		Thread thread = new Thread(new AttachmeRegistry(port, listener, console));
-		thread.setDaemon(true);
-		thread.setName("AttachmeListener");
-		return thread;
-	}
-
 	static final Gson gson = new Gson();
-
-	public interface Listener {
-		void onDebuggeeProcess(ProcessRegisterMsg msg);
-		void onFinished();
-	}
-
-	public interface Console {
-		void info(String str);
-
-		void error(String str);
-
-		Console dummy = new Console() {
-			@Override
-			public void info(String str) {
-				System.out.println(str);
-			}
-
-			@Override
-			public void error(String str) {
-				System.out.println(str);
-			}
-		};
-	}
-
 	final int port;
 	final Listener listener;
 	final Console log;
@@ -50,6 +19,13 @@ public class AttachmeRegistry implements Runnable {
 		this.port = port;
 		this.listener = listener;
 		this.log = console;
+	}
+
+	public static Thread makeThread(int port, Listener listener, Console console) {
+		Thread thread = new Thread(new AttachmeRegistry(port, listener, console));
+		thread.setDaemon(true);
+		thread.setName("AttachmeListener");
+		return thread;
 	}
 
 	@Override
@@ -83,6 +59,30 @@ public class AttachmeRegistry implements Runnable {
 			this.log.info("Stopping attachme");
 			listener.onFinished();
 		}
+	}
+
+	public interface Listener {
+		void onDebuggeeProcess(ProcessRegisterMsg msg);
+
+		void onFinished();
+	}
+
+	public interface Console {
+		Console dummy = new Console() {
+			@Override
+			public void info(String str) {
+				System.out.println(str);
+			}
+
+			@Override
+			public void error(String str) {
+				System.out.println(str);
+			}
+		};
+
+		void info(String str);
+
+		void error(String str);
 	}
 
 }
