@@ -1,18 +1,21 @@
 <idea-plugin>
-    <id>com.attachme.plugin</id>
-    <name>Attachme</name>
+    <id>com.attachme</id>
+    <name>AttachMe</name>
     <vendor email="samvel1024@gmail.com">Samvel Abrahamyan</vendor>
     <depends>com.intellij.modules.java</depends>
 
-    <description>A plugin for auto attaching InttelliJ debugger to java processes</description>
+    <description>
+        A plugin that improves the way IntelliJ debugger attaches to java processes.
+        Supports auto-attaching to newly forked child JVMs, and JVMs started outside of IntelliJ.
+    </description>
 
     <extensions defaultExtensionNs="com.intellij">
-        <configurationType implementation="com.attachme.plugin.run.AttachmeRunConfType"/>
+        <configurationType implementation="com.attachme.plugin.AttachmeRunConfType"/>
     </extensions>
 
     <extensions defaultExtensionNs="com.intellij">
         <programRunner
-                implementation="com.attachme.plugin.run.AttachmeDebugger$ProcessAttachDebuggerRunner"
+                implementation="com.attachme.plugin.AttachmeDebugger$ProcessAttachDebuggerRunner"
                 order="last"/>
     </extensions>
 
