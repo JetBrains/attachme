@@ -25,3 +25,7 @@ patchPluginXml {
       Add change notes here.<br>
       <em>most HTML tags may be used</em>"""
 }
+
+publishPlugin {
+    token = System.getenv("ATTACHME_PUBLISH_TOKEN")
+}
