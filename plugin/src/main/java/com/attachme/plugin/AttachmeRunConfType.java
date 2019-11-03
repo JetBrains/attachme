@@ -24,7 +24,7 @@ public class AttachmeRunConfType implements ConfigurationType {
 
   @Override
   public Icon getIcon() {
-    return AllIcons.Debugger.Db_watch;
+    return AllIcons.Debugger.AttachToProcess;
   }
 
   @NotNull
