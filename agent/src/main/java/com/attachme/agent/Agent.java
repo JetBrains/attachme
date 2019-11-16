@@ -1,7 +1,9 @@
 package com.attachme.agent;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 import java.lang.instrument.Instrumentation;
+import java.lang.management.ManagementFactory;
 import java.util.*;
 
 public class Agent {
@@ -13,7 +15,7 @@ public class Agent {
     Set<String> allowed = new HashSet<>(Arrays.asList("port", "python"));
     Map<String, String> ans = new HashMap<>();
     for (String arg : args.split(",")) {
-      String kv[] = arg.split(":");
+      String[] kv = arg.split(":");
       if (kv.length != 2) {
         throw new IllegalArgumentException("Illegal argument format");
       }
@@ -58,45 +60,56 @@ public class Agent {
       this.args = args;
     }
 
+    private int getPid() {
+      final String jvmName = ManagementFactory.getRuntimeMXBean().getName();
+      final int index = jvmName.indexOf('@');
+      if (index < 1) {
+        return -1;
+      }
+      try {
+        return Integer.parseInt(jvmName.substring(0, index));
+      } catch (NumberFormatException e) {
+        return -1;
+      }
+    }
+
     @Override
     public void run() {
-      try {
-        doRun();
-      } catch (InterruptedException e) {
-        e.printStackTrace();
-        Thread.currentThread().interrupt();
-      } catch (Throwable e) {
-        e.printStackTrace();
-        throw new RuntimeException(e);
+      int pid = getPid();
+      if (pid == -1) {
+        System.err.println("[attache] Could not determine the pid of the process");
+        System.exit(1);
+        return;
       }
-    }
+      PortResolver portResolver = PortResolver.createPerOS();
+      if (portResolver == null) {
+        System.err.println("[attachme] Your OS is not supported os.name=" + System.getProperty("os.name"));
+        System.exit(1);
+        return;
+      }
 
-    void pipeScript(Process proc) throws IOException {
-      BufferedReader script = new BufferedReader(new InputStreamReader(
-        Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream("util.py"))));
-      BufferedWriter procInput = new BufferedWriter(new OutputStreamWriter(proc.getOutputStream()));
-      String line = null;
-      while ((line = script.readLine()) != null) {
-        procInput.write(line + System.lineSeparator());
+      long start = System.currentTimeMillis();
+      List<Integer> ports = Collections.emptyList();
+      while (System.currentTimeMillis() - start < 1000 && ports.isEmpty()) {
+        ports = portResolver.getPortCandidates(pid);
+        if (ports.isEmpty()) {
+          try {
+            Thread.sleep(100);
+          } catch (InterruptedException e) {
+            e.printStackTrace();
+          }
+        }
+        else try (AttachmeClient client = new AttachmeClient(Integer.parseInt(args.getOrDefault("port", "7857")))) {
+          client.sendBoundPorts(ports, pid);
+        } catch (IOException e) {
+          System.err.println("[attachme] IOException: Please turn on attachme listener in IntelliJ IDEA");
+        } catch (Exception e) {
+          System.err.println("[attachme] Unknown error happened, please report in github");
+          e.printStackTrace();
+        }
       }
-      procInput.close();
-    }
-
-    private void doRun() throws InterruptedException, IOException {
-      ProcessBuilder builder = new ProcessBuilder()
-        .command(args.getOrDefault("python", "python"))
-        .redirectErrorStream(true);
-      builder.environment().put("ATTACHME_PORT", args.getOrDefault("port", "7857"));
-      Process python = builder.start();
-      pipeScript(python);
-      BufferedReader script = new BufferedReader(new InputStreamReader(python.getInputStream()));
-      Scanner sc = new Scanner(script);
-      while (sc.hasNext()) {
-        System.err.println("[attachme] " + sc.nextLine());
-      }
-      python.waitFor();
-      if (python.exitValue() != 0) {
-        throw new RuntimeException("The python subprocess exited with error code " + python.exitValue());
+      if (ports.isEmpty()) {
+        System.err.println("[attachme] Could not find bound ports, maybe you did not attach a debugger");
       }
     }
   }

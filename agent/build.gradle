@@ -9,7 +9,7 @@ repositories {
 }
 
 jar {
-    archiveFileName = "agent.jar"
+    archiveFileName = "attachme-agent.jar"
     manifest {
         attributes(
                 'Premain-Class': 'com.attachme.agent.Agent',
