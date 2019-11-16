@@ -12,7 +12,7 @@ The behaviour will be similar to `set follow-fork-mode child` in the GDB debugge
 #### Installation and usage
 
 1. Download and install the plugin from IntelliJ ([link](https://plugins.jetbrains.com/plugin/13263-attachme/))
-2. Download the JVM agent library and unzip it. Place the `attachme-agent.jar` in an accessible location ([link](https://github.com/samvel1024/attachme/releases/latest/downloads/attachme-agent.zip))
+2. Download the JVM agent library and unzip it. Place the `attachme-agent.jar` in an accessible location ([link](https://github.com/samvel1024/attachme/releases/latest/download/attachme-agent.zip))
 3. Verify that you have python3 installed.
 4. Install `psutil` python library. (`pip install psutil`)
 5. Start the AttachMe listener by going to ` Run > Edit Configurations > Add New` . Then search for `Attachme`, select it and run.
