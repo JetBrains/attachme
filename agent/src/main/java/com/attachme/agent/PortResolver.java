@@ -8,9 +8,9 @@ public interface PortResolver {
   static PortResolver createPerOS() {
     String os = System.getProperty("os.name").toLowerCase();
     if (os.contains("windows")) {
-      return new WindowsPortResolver();
+      return CommandPortResolver.forWindows();
     } else if (os.contains("linux") || os.contains("mac") || os.contains("darwin")) {
-      return new UnixPortResolver();
+      return CommandPortResolver.forUnix();
     } else {
 
       return null;

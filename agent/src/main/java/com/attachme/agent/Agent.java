@@ -77,7 +77,7 @@ public class Agent {
     public void run() {
       int pid = getPid();
       if (pid == -1) {
-        System.err.println("[attache] Could not determine the pid of the process");
+        System.err.println("[attachme] Could not determine the pid of the process");
         System.exit(1);
         return;
       }
@@ -87,6 +87,7 @@ public class Agent {
         System.exit(1);
         return;
       }
+      System.err.println("[attachme] Initialized agent for process PID=" + pid);
 
       long start = System.currentTimeMillis();
       List<Integer> ports = Collections.emptyList();

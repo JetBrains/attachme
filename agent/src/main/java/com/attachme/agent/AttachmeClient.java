@@ -6,8 +6,6 @@ import java.util.List;
 
 public class AttachmeClient implements AutoCloseable {
 
-  // Avoid JSON library for now
-  static String MSG_FORMAT = "{\"pid\":${PID},\"ports\":[${PORTS_CS}]}";
   private final Socket sock;
 
   public AttachmeClient(int port) throws IOException {
@@ -25,7 +23,8 @@ public class AttachmeClient implements AutoCloseable {
   }
 
   private String makeMsg(List<Integer> ports, int pid) {
-    return MSG_FORMAT.replace("${PID}", pid + "").replace("${PORTS_CS}", commaSeparated(ports));
+    // Avoid JSON library for now
+    return String.format("{\"pid\":%d,\"ports\":[%s]}", pid, commaSeparated(ports));
   }
 
   public void sendBoundPorts(List<Integer> ports, int pid) throws IOException {

@@ -8,15 +8,27 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
-/**
- * Runs lsof to determine open ports
- * The output should look something like this
- * COMMAND PID USER FD TYPE DEVICE SIZE/OFF NODE NAME
- * java 36831 muser 3u IPv4 0xa3d79356337c9c21 0t0 TCP *:8083 (LISTEN)
- */
-public class UnixPortResolver implements PortResolver {
+public class CommandPortResolver implements PortResolver {
 
-  static String COMMAND = "lsof -a -iTCP -Pi -p ${PID}";
+  public static PortResolver forUnix() {
+    return new CommandPortResolver("lsof -a -iTCP -Pi -p ${PID}", ":([0-9]+)\\s\\(LISTEN\\)", 1);
+  }
+
+  // TODO
+  public static PortResolver forWindows() {
+    return null;
+  }
+
+  private final String command;
+  private final Pattern regex;
+  private final int regexGroup;
+
+
+  public CommandPortResolver(String command, String regex, int regexGroup) {
+    this.command = command;
+    this.regex = Pattern.compile(regex);
+    this.regexGroup = regexGroup;
+  }
 
   @Override
   public List<Integer> getPortCandidates(int pid) {
@@ -24,7 +36,7 @@ public class UnixPortResolver implements PortResolver {
     int status = 0;
     try {
       Process proc = new ProcessBuilder()
-        .command(COMMAND.replace("${PID}", pid + "").split(" "))
+        .command(command.replace("${PID}", pid + "").split(" "))
         .redirectErrorStream(true)
         .start();
       BufferedReader script = new BufferedReader(new InputStreamReader(proc.getInputStream()));
@@ -40,18 +52,17 @@ public class UnixPortResolver implements PortResolver {
     }
 
     if (status != 0) {
-      System.err.println("[attachme] The command " + COMMAND + " finished with status code " + status);
+      System.err.println("[attachme] The command " + command + " finished with status code " + status);
     }
 
-    Pattern p = Pattern.compile(":([0-9]+)\\s\\(LISTEN\\)");
-    Matcher matcher = p.matcher(output);
+    Matcher matcher = regex.matcher(output);
     List<Integer> ans = new ArrayList<>();
     while (matcher.find()) {
-      String group = matcher.group(1);
+      String group = matcher.group(regexGroup);
       ans.add(Integer.parseInt(group));
     }
     if (ans.isEmpty()) {
-      System.err.println("[attachme] Command " + COMMAND + " could not find open ports");
+      System.err.println("[attachme] Command " + command + " could not find open ports");
     }
     return ans;
   }
