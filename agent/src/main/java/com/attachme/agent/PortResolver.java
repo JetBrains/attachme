@@ -12,7 +12,6 @@ public interface PortResolver {
     } else if (os.contains("linux") || os.contains("mac") || os.contains("darwin")) {
       return CommandPortResolver.forUnix();
     } else {
-
       return null;
     }
   }

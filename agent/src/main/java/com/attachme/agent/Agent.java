@@ -1,6 +1,5 @@
 package com.attachme.agent;
 
-import java.io.File;
 import java.io.IOException;
 import java.lang.instrument.Instrumentation;
 import java.lang.management.ManagementFactory;
@@ -8,11 +7,12 @@ import java.util.*;
 
 public class Agent {
 
+  static final String DEFAULT_PORT = "7857";
 
   private static Map<String, String> parseArgs(String args) {
     if (args == null || args.trim().isEmpty())
       return Collections.emptyMap();
-    Set<String> allowed = new HashSet<>(Arrays.asList("port", "python"));
+    Set<String> allowed = new HashSet<>(Arrays.asList("port"));
     Map<String, String> ans = new HashMap<>();
     for (String arg : args.split(",")) {
       String[] kv = arg.split(":");
@@ -30,9 +30,6 @@ public class Agent {
         Integer.parseInt(ans.get("port"));
     } catch (NumberFormatException e) {
       throw new IllegalArgumentException("Illegal port number", e);
-    }
-    if (ans.containsKey("python") && !new File(ans.get("python")).exists()) {
-      throw new IllegalArgumentException("Python path does not exist");
     }
     return ans;
   }
@@ -99,15 +96,15 @@ public class Agent {
           } catch (InterruptedException e) {
             e.printStackTrace();
           }
-        }
-        else try (AttachmeClient client = new AttachmeClient(Integer.parseInt(args.getOrDefault("port", "7857")))) {
-          client.sendBoundPorts(ports, pid);
-        } catch (IOException e) {
-          System.err.println("[attachme] IOException: Please turn on attachme listener in IntelliJ IDEA");
-        } catch (Exception e) {
-          System.err.println("[attachme] Unknown error happened, please report in github");
-          e.printStackTrace();
-        }
+        } else
+          try (AttachmeClient client = new AttachmeClient(Integer.parseInt(args.getOrDefault("port", DEFAULT_PORT)))) {
+            client.sendBoundPorts(ports, pid);
+          } catch (IOException e) {
+            System.err.println("[attachme] IOException: Please turn on attachme listener in IntelliJ IDEA");
+          } catch (Exception e) {
+            System.err.println("[attachme] Unknown error happened, please report in github");
+            e.printStackTrace();
+          }
       }
       if (ports.isEmpty()) {
         System.err.println("[attachme] Could not find bound ports, maybe you did not attach a debugger");
