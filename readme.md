@@ -12,7 +12,10 @@ The behaviour will be similar to `set follow-fork-mode child` in the GDB debugge
 #### Installation and usage
 
 1. Download and install the plugin from IntelliJ ([link](https://plugins.jetbrains.com/plugin/13263-attachme/))
-2. Download the JVM agent library and unzip it. Place the `attachme-agent.jar` in an accessible location ([link](https://github.com/samvel1024/attachme/releases/latest/download/attachme-agent.zip))
+2. Download the JVM agent library jar. Place the `attachme-agent.jar` in an accessible location ([link](https://github.com/samvel1024/attachme/releases/latest/download/attachme-agent.zip))
+```
+wget  https://github.com/samvel1024/attachme/releases/latest/download/attachme-agent.jar
+```
 3. Start the AttachMe listener by going to ` Run > Edit Configurations > Add New` . Then search for `Attachme`, select it and run.
 4. Now that you see the AttachMe window with the `AttachMe listening ...` message, you are ready to start your debuggee java process.
 The idea is to configure AttachMe agent to run before the debugger (JDWP) agent (the order of agent args is important if you have `suspend=y` for jdwp).
