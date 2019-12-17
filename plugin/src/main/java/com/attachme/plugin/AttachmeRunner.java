@@ -16,7 +16,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.OutputStream;
 
-public class AttachmeRunner implements RunProfileState, AttachmeRegistry.Listener {
+public class AttachmeRunner implements RunProfileState, AttachmeRunTask.Listener {
 
   final Project project;
   final AttachmeRunConfig runConf;
@@ -30,7 +30,7 @@ public class AttachmeRunner implements RunProfileState, AttachmeRegistry.Listene
   @Nullable
   @Override
   public ExecutionResult execute(Executor executor, @NotNull ProgramRunner runner) throws ExecutionException {
-    Thread thread = AttachmeRegistry.makeThread(runConf.getPort(), this, new AttachmeRegistry.Console() {
+    AttachmeRunTask.Console logger = new AttachmeRunTask.Console() {
       @Override
       public void info(String str) {
         procHandler.notifyTextAvailable(str + System.lineSeparator(), ProcessOutputType.STDOUT);
@@ -40,7 +40,8 @@ public class AttachmeRunner implements RunProfileState, AttachmeRegistry.Listene
       public void error(String str) {
         procHandler.notifyTextAvailable(str + System.lineSeparator(), ProcessOutputType.STDERR);
       }
-    });
+    };
+    Thread thread = AttachmeRunTask.makeThread(runConf.getPort(), this, logger, new AttachmeInstaller(logger));
     this.procHandler = new MProcHandler(thread);
     ConsoleViewImpl console = new ConsoleViewImpl(this.project, false);
     console.attachToProcess(this.procHandler);

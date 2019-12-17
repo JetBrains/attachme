@@ -10,21 +10,23 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Scanner;
 
-public class AttachmeRegistry implements Runnable {
+public class AttachmeRunTask implements Runnable {
 
   final Gson gson = new Gson();
   final int port;
   final Listener listener;
   final Console log;
+  final AttachmeInstaller installer;
 
-  public AttachmeRegistry(int port, Listener listener, Console console) {
+  public AttachmeRunTask(int port, Listener listener, Console console, AttachmeInstaller installer) {
     this.port = port;
     this.listener = listener;
     this.log = console;
+    this.installer = installer;
   }
 
-  public static Thread makeThread(int port, Listener listener, Console console) {
-    Thread thread = new Thread(new AttachmeRegistry(port, listener, console));
+  public static Thread makeThread(int port, Listener listener, Console console, AttachmeInstaller installer) {
+    Thread thread = new Thread(new AttachmeRunTask(port, listener, console, installer));
     thread.setDaemon(true);
     thread.setName("AttachmeListener");
     return thread;
@@ -33,7 +35,8 @@ public class AttachmeRegistry implements Runnable {
   @Override
   public void run() {
     try {
-      doRun();
+      installer.verifyInstallation();
+      runServer();
     } catch (Exception e) {
       this.log.error("Error " + e.getMessage());
       throw new RuntimeException(e);
@@ -52,7 +55,7 @@ public class AttachmeRegistry implements Runnable {
     listener.onFinished();
   }
 
-  private void doRun() throws IOException {
+  private void runServer() throws IOException {
     try (ServerSocket server = new ServerSocket(this.port)) {
       server.setSoTimeout(500);
       this.log.info("AttachMe listening for debuggee processes on port " + this.port);
