@@ -1,14 +1,11 @@
 package com.attachme.plugin;
 
-import com.attachme.plugin.AttachmeRunTask;
 import com.intellij.ide.plugins.PluginManager;
 import com.intellij.openapi.extensions.PluginId;
-import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.io.FileUtil;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -62,13 +59,9 @@ public class AttachmeInstaller {
 
 
   private File getInstallDir() {
-    if (SystemInfo.isUnix) {
-      String home = Objects.requireNonNull(System.getenv("HOME"), "HOME env variable is not set");
-      String location = home + "/.attachme/";
-      return new File(location);
-    } else {
-      throw new RuntimeException();
-    }
+    String home = Objects.requireNonNull(System.getProperty("user.home"), "user.home variable is not set");
+    String location = home + "/.attachme/";
+    return new File(location);
   }
 
   private String packedJarName() {
