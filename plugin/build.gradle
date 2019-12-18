@@ -29,6 +29,8 @@ intellij {
 }
 patchPluginXml {
     changeNotes ""
+    sinceBuild "192.*" 
+    untilBuild "210.*"
 }
 
 publishPlugin {

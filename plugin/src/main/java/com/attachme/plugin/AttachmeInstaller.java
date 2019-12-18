@@ -53,10 +53,23 @@ public class AttachmeInstaller {
       for (String file : files) {
         exportFile(file, installDir);
       }
-      log.info("Done");
+      printHelp();
     }
   }
 
+
+  private void printHelp() {
+    String help = "\n" +
+      "****************************  Instructions ****************************\n" +
+      "To auto-attach the debugger please execute these commands in your shell interpreter\n" +
+      "\t$ source ~/.attachme/conf.sh\n" +
+      "\t$ java com.example.MyApp\n" +
+      "In case you want to modify the port of AttachMe or java debugger (JDWP) arguments\n" +
+      "\t$ JDWP_ARGS=\"transport=dt_socket,server=y,suspend=y,address=127.0.0.1:0\" AM_PORT=9009 source ~/.attachme/conf.sh\n" +
+      "For more details, questions or bug reports refer to https://github.com/JetBrains/attachme/\n" +
+      "***********************************************************************\n";
+    log.info(help);
+  }
 
   private File getInstallDir() {
     String home = Objects.requireNonNull(System.getProperty("user.home"), "user.home variable is not set");
