@@ -9,28 +9,43 @@ The behaviour will be similar to `set follow-fork-mode child` in the GDB debugge
 
 ![](demo.gif)
 
-#### Installation and usage
 
-1. Download and install the plugin from IntelliJ ([link](https://plugins.jetbrains.com/plugin/13263-attachme/))
-2. Run the agent installer script
-```
-curl -sSL https://raw.githubusercontent.com/JetBrains/attachme/master/installer.sh | sh
-```
-3. Start the AttachMe listener by going to ` Run > Edit Configurations > Add New` . Then search for `Attachme`, select it and run.
-4. Now that you see the AttachMe window with the `AttachMe listening ...` message, you are ready to start your debuggee java process.
+### Usage
+  
 
-``` bash
-source ~/.attachme
-java com.example.MyProgram
+1. Download and install the plugin from the plugin marketplace. [https://plugins.jetbrains.com/plugin/13263-attachme/](https://plugins.jetbrains.com/plugin/13263-attachme/)
+
+2. Start the AttachMe listener by going to `Run > Edit Configurations > Add New`. Then search for `Attachme`, select it, and run.
+
+3. On the first run, the plugin will install a JVM agent jar and a bash configuration script in the $HOME/.attachme/ directory. To auto-attach the debugger, configure AttachMe like this:
+
+  ```
+
+source ~/.attachme/conf.sh
+
+java com.example.MyApp # anything that runs on the JVM
+
 ```
 
-#### Notes
+Now you should see a new debugger window attached to the process and any of its child processes.
 
-- The port of the AttachMe listener can be changed in the `Run Configuration` settings inside IntelliJ
-- The attachme agent can receive additional optional arguments.
+  
+If you want to have custom JDWP or AttachMe port configuration, you can run it like this:
 ```
--javaagent:/Users/sme/forkattach/agent/build/libs/agent.jar=port:8080`
+JDWP_ARGS="transport=dt_socket..." AM_PORT=9009 source ~/.attachme/conf.sh
+
+java com.example.MyApp
 ```
-- If you want to auto-attach to any newly forked child JVM process then you have to use environment variable `JAVA_TOOL_OPTIONS` and set 
-JDWP to listen to port 0 (possibly by `address=*:0`).
-- Not all operating systems are tested thoroughly. Please report an issue if you find a strange behaviour.
+
+  
+
+### Known Issues
+
+  
+
+- You may have a problem with the bind address, which will manifest itself with this error: 
+```JDWP exit error AGENT_ERROR_TRANSPORT_INIT(197): No transports initialized [debugInit.c:750]``` To fix it, try to configure AttachMe with port address 127.0.0.1, like this:
+```
+JDWP_ARGS="transport=dt_socket,server=y,suspend=y,address=127.0.0.1:0" source ~/.attachme/conf.sh
+```
+  -  AttachMe is not compatible with the JMX agent. If you are having problems running it with the auto generated SpringBoot run configuration, most likely disabling JMX will fix the problem.
