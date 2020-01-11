@@ -6,7 +6,7 @@
     <description>
         A plugin that improves the way IntelliJ debugger attaches to java processes.
         Supports auto-attaching to newly forked child JVMs and JVMs started outside of IntelliJ.
-        Read the &lt;a href="https://github.com/samvel1024/attachme"&gt;instructions&lt;a&gt; to be able to use the
+        Read the &lt;a href="https://github.com/JetBrains/attachme"&gt;instructions&lt;a&gt; to be able to use the
         plugin.
     </description>
 
