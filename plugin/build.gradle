@@ -1,3 +1,5 @@
+import org.apache.tools.ant.filters.ReplaceTokens
+
 plugins {
     id 'org.jetbrains.intellij' version '0.4.10'
     id 'java'
@@ -5,7 +7,7 @@ plugins {
 
 
 group = 'com.attachme'
-version='0.0.4'
+version = '0.0.6'
 sourceCompatibility = 1.8
 
 repositories {
@@ -29,8 +31,21 @@ intellij {
 }
 patchPluginXml {
     changeNotes ""
-    sinceBuild "192.*" 
+    sinceBuild "192.*"
     untilBuild "210.*"
+}
+
+
+processResources.dependsOn(":agent:build")
+
+processResources {
+    from("${project(":agent").getBuildDir()}/libs") {
+        rename "attachme-agent.jar", "attachme-agent-${version}.jar"
+    }
+    from("src/main/resources/conf.sh") {
+        filter ReplaceTokens, tokens: [ATTACHME_VERSION: version]
+    }
+
 }
 
 publishPlugin {
