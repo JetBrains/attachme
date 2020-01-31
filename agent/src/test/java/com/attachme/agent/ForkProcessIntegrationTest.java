@@ -1,33 +1,15 @@
 package com.attachme.agent;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
 
-public class ForkProcessIntegrationTest {
+public class ForkProcessIntegrationTest extends BaseIntegrationTest {
 
-  final int processNumber = 4;
-  final int port = 9090;
-  CountDownLatch latch = new CountDownLatch(processNumber);
-  boolean allPortsNonEmpty = true;
-
-
-  AttachmeServer.Listener listener = new AttachmeServer.Listener() {
-
-    @Override
-    public void onDebuggeeProcess(ProcessRegisterMsg msg) {
-      latch.countDown();
-      if (msg.getPorts().isEmpty()) allPortsNonEmpty = false;
-    }
-
-    @Override
-    public void onFinished() {
-    }
-  };
+  public ForkProcessIntegrationTest() {
+    super(2, 9090);
+  }
 
   private String getAgentJar() {
     String path = new File("").getAbsolutePath() + "/build/libs/attachme-agent.jar";
@@ -37,7 +19,8 @@ public class ForkProcessIntegrationTest {
     return path;
   }
 
-  private Process spawnProcess() {
+  @Override
+  AutoCloseable spawnBackgroundProcess() {
     String java = System.getProperty("java.home") + "/bin/java";
     String javaToolOptions = String.format(
       "-javaagent:%s=port:%d " +
@@ -50,29 +33,20 @@ public class ForkProcessIntegrationTest {
       builder.environment().put("NO_WAIT", "YES");
       //Add builder.inheritIO() to troubleshoot a failing test
       builder.directory(new File("src/test/resources"));
-      return builder.start();
+      Process start = builder.start();
+      return () -> {
+        if (0 != start.waitFor()) {
+          throw new IllegalStateException("Process exited with non 0 status");
+        }
+      };
     } catch (IOException e) {
       throw new IllegalStateException(e);
     }
   }
 
   @Test
-  public void serverReceivesMessageFromForkedJVM() throws InterruptedException {
-    Thread t = AttachmeServer.makeThread(9090, listener, AttachmeServer.Console.dummy);
-    t.start();
-    Process proc = null;
-    try {
-      proc = spawnProcess();
-      Assert.assertTrue("Timeout reached, no process sent a message", latch.await(10, TimeUnit.SECONDS));
-      Assert.assertTrue(allPortsNonEmpty);
-      Assert.assertEquals(0, proc.waitFor());
-      t.interrupt();
-      t.join();
-    } finally {
-      if (proc != null) {
-        proc.waitFor();
-      }
-    }
-
+  public void receivesMessageFromForkedProcess() throws Exception {
+    super.assertReceivesMessage();
   }
+
 }
