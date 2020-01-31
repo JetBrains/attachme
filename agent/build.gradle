@@ -33,3 +33,4 @@ jar {
 test {
     useJUnit()
 }
+test.dependsOn("assemble")

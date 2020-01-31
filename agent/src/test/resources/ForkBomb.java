@@ -14,9 +14,11 @@ public class ForkBomb {
     int index = Integer.parseInt(args[0]);
     print("Spawned new process with id " + index);
     if (index <= 0){
-      print("Reached the last level. Press any key...");
-      Scanner sc = new Scanner(System.in);
-      sc.next();
+      if (System.getenv().get("NO_WAIT") == null) {
+        print("Reached the last level. Press any key...");
+        Scanner sc = new Scanner(System.in);
+        sc.next();
+      }
     }else {
       new ProcessBuilder()
         .command("java", "ForkBomb.java", "" + (index - 1))
