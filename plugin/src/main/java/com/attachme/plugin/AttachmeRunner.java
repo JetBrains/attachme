@@ -1,5 +1,7 @@
 package com.attachme.plugin;
 
+import com.attachme.agent.AttachmeServer;
+import com.attachme.agent.ProcessRegisterMsg;
 import com.intellij.execution.DefaultExecutionResult;
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.ExecutionResult;
@@ -14,9 +16,10 @@ import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.IOException;
 import java.io.OutputStream;
 
-public class AttachmeRunner implements RunProfileState, AttachmeRunTask.Listener {
+public class AttachmeRunner implements RunProfileState, AttachmeServer.Listener {
 
   final Project project;
   final AttachmeRunConfig runConf;
@@ -30,7 +33,7 @@ public class AttachmeRunner implements RunProfileState, AttachmeRunTask.Listener
   @Nullable
   @Override
   public ExecutionResult execute(Executor executor, @NotNull ProgramRunner runner) throws ExecutionException {
-    AttachmeRunTask.Console logger = new AttachmeRunTask.Console() {
+    AttachmeServer.Console logger = new AttachmeServer.Console() {
       @Override
       public void info(String str) {
         procHandler.notifyTextAvailable(str + System.lineSeparator(), ProcessOutputType.STDOUT);
@@ -41,11 +44,16 @@ public class AttachmeRunner implements RunProfileState, AttachmeRunTask.Listener
         procHandler.notifyTextAvailable(str + System.lineSeparator(), ProcessOutputType.STDERR);
       }
     };
-    Thread thread = AttachmeRunTask.makeThread(runConf.getPort(), this, logger, new AttachmeInstaller(logger));
+    Thread thread = AttachmeServer.makeThread(runConf.getPort(), this, logger);
     this.procHandler = new MProcHandler(thread);
     ConsoleViewImpl console = new ConsoleViewImpl(this.project, false);
     console.attachToProcess(this.procHandler);
     thread.start();
+    try {
+      new AttachmeInstaller(logger).verifyInstallation();
+    } catch (IOException e) {
+      throw new ExecutionException("Could not install attachme files", e);
+    }
     return new DefaultExecutionResult(console, this.procHandler);
   }
 

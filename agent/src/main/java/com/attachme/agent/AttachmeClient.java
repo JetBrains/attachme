@@ -1,6 +1,8 @@
 package com.attachme.agent;
 
 import java.io.IOException;
+import java.io.ObjectOutput;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.List;
 
@@ -22,14 +24,12 @@ public class AttachmeClient implements AutoCloseable {
     return sb.toString();
   }
 
-  private String makeMsg(List<Integer> ports, int pid) {
-    // Avoid JSON library for now
-    return String.format("{\"pid\":%d,\"ports\":[%s]}", pid, commaSeparated(ports));
-  }
-
   public void sendBoundPorts(List<Integer> ports, int pid) throws IOException {
-    String msg = makeMsg(ports, pid);
-    sock.getOutputStream().write((msg + System.lineSeparator()).getBytes());
+    ProcessRegisterMsg msg = new ProcessRegisterMsg();
+    msg.setPid(pid);
+    msg.setPorts(ports);
+    ObjectOutputStream stream = new ObjectOutputStream(sock.getOutputStream());
+    stream.writeObject(msg);
     System.err.println("[attachme] Successfully notified attachme listener");
   }
 

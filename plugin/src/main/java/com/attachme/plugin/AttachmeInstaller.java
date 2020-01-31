@@ -8,12 +8,13 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import com.attachme.agent.*;
 
 public class AttachmeInstaller {
 
-  final AttachmeRunTask.Console log;
+  final AttachmeServer.Console log;
 
-  public AttachmeInstaller(AttachmeRunTask.Console log) {
+  public AttachmeInstaller(AttachmeServer.Console log) {
     this.log = log;
   }
 

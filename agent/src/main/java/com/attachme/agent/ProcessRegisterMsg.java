@@ -1,8 +1,9 @@
-package com.attachme.plugin;
+package com.attachme.agent;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class ProcessRegisterMsg {
+public class ProcessRegisterMsg implements Serializable {
   private List<Integer> ports;
 
   private Integer pid;
