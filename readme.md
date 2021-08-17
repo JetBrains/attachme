@@ -1,3 +1,5 @@
+[![JetBrains Team project](https://jb.gg/badges/team.svg)](https://confluence.jetbrains.com/display/ALL/JetBrains+on+GitHub)
+
 ## AttachMe - IntelliJ debugger plugin
 
 - AttachMe will attach the IntelliJ debugger automatically even if you start your app from terminal (or any other way).
