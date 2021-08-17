@@ -38,7 +38,7 @@ public abstract class BaseIntegrationTest {
     Thread t = AttachmeServer.makeThread(9090, listener, AttachmeServer.Console.dummy);
     t.start();
     try (AutoCloseable ignored = spawnBackgroundProcess()) {
-      Assert.assertTrue("Timeout reached, no process sent a message", latch.await(4, TimeUnit.SECONDS));
+      Assert.assertTrue("Timeout reached, no process sent a message", latch.await(20, TimeUnit.SECONDS));
       Assert.assertTrue(allPortsNonEmpty);
       t.interrupt();
       t.join();

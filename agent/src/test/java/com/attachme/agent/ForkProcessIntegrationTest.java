@@ -1,10 +1,12 @@
 package com.attachme.agent;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
 
+@Ignore
 public class ForkProcessIntegrationTest extends BaseIntegrationTest {
 
   public ForkProcessIntegrationTest() {
