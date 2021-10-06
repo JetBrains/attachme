@@ -15,7 +15,7 @@ public abstract class BaseIntegrationTest {
   AttachmeServer.Listener listener = new AttachmeServer.Listener() {
 
     @Override
-    public void onDebuggeeProcess(ProcessRegisterMsg msg) {
+    public void onDebuggeeProcess(ProcessRegisterMsg msg, String debuggeeAddress) {
       latch.countDown();
       if (msg.getPorts().isEmpty()) allPortsNonEmpty = false;
     }

@@ -58,12 +58,12 @@ public class AttachmeRunner implements RunProfileState, AttachmeServer.Listener 
   }
 
   @Override
-  public void onDebuggeeProcess(ProcessRegisterMsg msg) {
+  public void onDebuggeeProcess(ProcessRegisterMsg msg, String debuggeeAddress) {
     if (msg.getPorts().isEmpty()) {
       procHandler.notifyTextAvailable("Receieved message with no ports", ProcessOutputType.STDERR);
       return;
     }
-    RemoteConnection config = new RemoteConnection(true, "localhost", msg.getPorts().get(0) + "", false);
+    RemoteConnection config = new RemoteConnection(true, debuggeeAddress, msg.getPorts().get(0) + "", false);
     AttachmeDebugger.attach(project, config, msg.getPid());
   }
 

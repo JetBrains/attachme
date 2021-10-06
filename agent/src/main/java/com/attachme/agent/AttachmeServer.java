@@ -5,6 +5,7 @@ import java.io.*;
 import java.net.BindException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.InetSocketAddress;
 
 public class AttachmeServer implements Runnable {
 
@@ -54,10 +55,11 @@ public class AttachmeServer implements Runnable {
       while (!Thread.currentThread().isInterrupted()) {
         try (Socket accept = server.accept()) {
           try {
+            String clientAddress = accept.getRemoteSocketAddress().toString().split("/")[1].split(":")[0];
             InputStream inputStream = accept.getInputStream();
             ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
             ProcessRegisterMsg msg = (ProcessRegisterMsg) objectInputStream.readObject();
-            listener.onDebuggeeProcess(msg);
+            listener.onDebuggeeProcess(msg, clientAddress);
             this.log.info("Registered a debuggee process with pid " + msg.getPid() + " and possible ports " + msg.getPorts().toString());
           } catch (RuntimeException e) {
             e.printStackTrace();
@@ -81,7 +83,7 @@ public class AttachmeServer implements Runnable {
   public interface Listener {
     Listener dummy = new Listener() {
       @Override
-      public void onDebuggeeProcess(ProcessRegisterMsg msg) {
+      public void onDebuggeeProcess(ProcessRegisterMsg msg, String debuggeeAddress) {
 
       }
 
@@ -90,7 +92,7 @@ public class AttachmeServer implements Runnable {
 
       }
     };
-    void onDebuggeeProcess(ProcessRegisterMsg msg);
+    void onDebuggeeProcess(ProcessRegisterMsg msg, String debuggeeAddress);
 
     void onFinished();
   }
