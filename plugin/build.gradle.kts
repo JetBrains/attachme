@@ -1,12 +1,12 @@
 import org.apache.tools.ant.filters.ReplaceTokens
 
 plugins {
-    id("org.jetbrains.intellij") version "1.1.4"
+    id("org.jetbrains.intellij") version "1.2.0"
     id("java")
 }
 
 group = "com.attachme"
-version = "1.0.2"
+version = "1.1.0"
 
 java {
     sourceCompatibility = JavaVersion.VERSION_11
@@ -24,14 +24,14 @@ dependencies {
 // See https://github.com/JetBrains/gradle-intellij-plugin/
 intellij {
     plugins.set(listOf("java"))
-    version.set("2021.2")
+    version.set("LATEST-EAP-SNAPSHOT")
 }
 
 tasks {
     patchPluginXml {
         changeNotes.set("")
         sinceBuild.set("211.*")
-        untilBuild.set("212.*")
+        untilBuild.set("213.*")
     }
 
     publishPlugin {
