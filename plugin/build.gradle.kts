@@ -1,12 +1,12 @@
 import org.apache.tools.ant.filters.ReplaceTokens
 
 plugins {
-    id("org.jetbrains.intellij") version "1.2.0"
+    id("org.jetbrains.intellij") version "1.6.0"
     id("java")
 }
 
 group = "com.attachme"
-version = "1.1.0"
+version = "1.2.0"
 
 java {
     sourceCompatibility = JavaVersion.VERSION_11
@@ -14,7 +14,6 @@ java {
 
 repositories {
     mavenCentral()
-    mavenLocal()
 }
 
 dependencies {
@@ -24,14 +23,14 @@ dependencies {
 // See https://github.com/JetBrains/gradle-intellij-plugin/
 intellij {
     plugins.set(listOf("java"))
-    version.set("LATEST-EAP-SNAPSHOT")
+    version.set("2022.1")
 }
 
 tasks {
     patchPluginXml {
         changeNotes.set("")
         sinceBuild.set("211.*")
-        untilBuild.set("213.*")
+        untilBuild.set("222.*")
     }
 
     publishPlugin {
@@ -40,7 +39,7 @@ tasks {
 
     processResources {
         dependsOn(":agent:build")
-        from("${project(":agent").getBuildDir()}/libs") {
+        from("${project(":agent").buildDir}/libs") {
             rename("attachme-agent.jar", "attachme-agent-${version}.jar")
         }
         from("src/main/resources/conf.sh") {
