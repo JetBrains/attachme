@@ -50,7 +50,7 @@ JDWP exit error AGENT_ERROR_TRANSPORT_INIT(197): No transports initialized [debu
 
 To fix it, try to configure AttachMe with port address 127.0.0.1, like this:
 ```
-JDWP_ARGS="transport=dt_socket,server=y,suspend=y,address=127.0.0.1:0" source ~/.attachme/conf.sh
+JDWP_ARGS="transport=dt_socket,server=y,suspend=y,quiet=y,address=127.0.0.1:0" source ~/.attachme/conf.sh
 ```
 
 AttachMe is not compatible with the JMX agent. If you are having problems running it with the auto generated SpringBoot run configuration, most likely disabling JMX will fix the problem.

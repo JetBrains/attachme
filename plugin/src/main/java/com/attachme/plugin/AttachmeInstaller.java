@@ -66,7 +66,7 @@ public class AttachmeInstaller {
       "\t$ source ~/.attachme/conf.sh\n" +
       "\t$ java com.example.MyApp\n" +
       "In case you want to modify the port of AttachMe or java debugger (JDWP) arguments\n" +
-      "\t$ JDWP_ARGS=\"transport=dt_socket,server=y,suspend=y,address=127.0.0.1:0\" AM_PORT=9009 source ~/.attachme/conf.sh\n" +
+      "\t$ JDWP_ARGS=\"transport=dt_socket,server=y,suspend=y,quiet=y,address=127.0.0.1:0\" AM_PORT=9009 source ~/.attachme/conf.sh\n" +
       "For more details, questions or bug reports refer to https://github.com/JetBrains/attachme/\n" +
       "***********************************************************************\n";
     log.info(help);
