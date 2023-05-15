@@ -6,7 +6,7 @@ plugins {
 }
 
 group = "com.attachme"
-version = "1.2.2"
+version = "1.2.3"
 
 java {
     sourceCompatibility = JavaVersion.VERSION_11
@@ -30,7 +30,7 @@ tasks {
     patchPluginXml {
         changeNotes.set("")
         sinceBuild.set("223.*")
-        untilBuild.set("231.*")
+        untilBuild.set("232.*")
     }
 
     publishPlugin {
