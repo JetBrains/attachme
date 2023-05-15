@@ -23,7 +23,7 @@ dependencies {
 // See https://plugins.jetbrains.com/docs/intellij/tools-gradle-intellij-plugin.html
 intellij {
     plugins.set(listOf("java"))
-    version.set("2023.1")
+    version.set("LATEST-EAP-SNAPSHOT")
 }
 
 tasks {
