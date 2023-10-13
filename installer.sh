@@ -10,7 +10,7 @@ if [ ! -f "${AGENT_PATH}" ]; then
 fi
 if [ ! -f "${HOME}/.attachme" ]; then
   {
-    echo "AM_JDWP_ARGS=\"\${JDWP_ARGS:=transport=dt_socket,server=y,suspend=y,address=*:0}\""
+    echo "AM_JDWP_ARGS=\"\${JDWP_ARGS:=transport=dt_socket,server=y,suspend=y,quiet=y,address=*:0}\""
     echo "echo Using JDWP arguments \${AM_JDWP_ARGS}"
     echo "export JAVA_TOOL_OPTIONS=\"-javaagent:${AGENT_PATH} -agentlib:jdwp=\${AM_JDWP_ARGS}\""
     echo "echo \"AttachMe configured successfully\""
@@ -21,7 +21,7 @@ fi
 cat << EOF
 AttachMe installed successfully
 Usage example:
-   #(Optional) export JDWP_ARGS="transport=dt_socket,server=y,suspend=n,address=127.0.0.1:0"
+   #(Optional) export JDWP_ARGS="transport=dt_socket,server=y,suspend=n,quiet=y,address=127.0.0.1:0"
    source ~/.attachme
    java com.example.Application
 EOF

@@ -15,7 +15,7 @@ services:
     ports:
       - 5001:5001
     environment:
-      JAVA_TOOL_OPTIONS: "-javaagent:attachme-agent.jar=port:7857,host:172.17.0.1 -agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=0.0.0.0:5001"
+      JAVA_TOOL_OPTIONS: "-javaagent:attachme-agent.jar=port:7857,host:172.17.0.1 -agentlib:jdwp=transport=dt_socket,server=y,quiet=y,suspend=y,address=0.0.0.0:5001"
     entrypoint: java EchoService 8081
 
   client:
@@ -29,5 +29,5 @@ services:
     ports:
       - 5002:5002
     environment:
-      JAVA_TOOL_OPTIONS: "-javaagent:attachme-agent.jar=port:7857,host:172.17.0.1 -agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=0.0.0.0:5002"
+      JAVA_TOOL_OPTIONS: "-javaagent:attachme-agent.jar=port:7857,host:172.17.0.1 -agentlib:jdwp=transport=dt_socket,server=y,quiet=y,suspend=y,address=0.0.0.0:5002"
     entrypoint: java Client echoservice 8081 HelloWorld
