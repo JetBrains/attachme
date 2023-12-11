@@ -1,7 +1,7 @@
 <idea-plugin>
     <id>com.attachme</id>
     <name>AttachMe</name>
-    <vendor email="justin.kaeser@jetbrains.com">JetBrains s.r.o.</vendor>
+    <vendor>JetBrains</vendor>
     <depends>com.intellij.modules.java</depends>
     <description>
         A plugin that improves the way IntelliJ debugger attaches to java processes.
