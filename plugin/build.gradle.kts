@@ -1,12 +1,12 @@
 import org.apache.tools.ant.filters.ReplaceTokens
 
 plugins {
-    id("org.jetbrains.intellij") version "1.15.0"
+    id("org.jetbrains.intellij") version "1.17.0"
     id("java")
 }
 
 group = "com.attachme"
-version = "1.2.4"
+version = "1.2.5"
 
 java {
     sourceCompatibility = JavaVersion.VERSION_11
@@ -29,8 +29,8 @@ intellij {
 tasks {
     patchPluginXml {
         changeNotes.set("")
-        sinceBuild.set("223.*")
-        untilBuild.set("233.*")
+        sinceBuild.set("241.*")
+        untilBuild.set("241.*")
     }
 
     publishPlugin {
