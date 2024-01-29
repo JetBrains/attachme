@@ -6,7 +6,7 @@ plugins {
 }
 
 group = "com.attachme"
-version = "1.2.5"
+version = "1.2.6"
 
 java {
     sourceCompatibility = JavaVersion.VERSION_11
@@ -29,7 +29,7 @@ intellij {
 tasks {
     patchPluginXml {
         changeNotes.set("")
-        sinceBuild.set("241.*")
+        sinceBuild.set("241")
         untilBuild.set("241.*")
     }
 
