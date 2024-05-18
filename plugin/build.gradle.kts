@@ -1,12 +1,12 @@
 import org.apache.tools.ant.filters.ReplaceTokens
 
 plugins {
-    id("org.jetbrains.intellij") version "1.17.0"
+    id("org.jetbrains.intellij") version "1.17.3"
     id("java")
 }
 
 group = "com.attachme"
-version = "1.2.6"
+version = "1.2.7"
 
 java {
     sourceCompatibility = JavaVersion.VERSION_11
@@ -30,7 +30,7 @@ tasks {
     patchPluginXml {
         changeNotes.set("")
         sinceBuild.set("241")
-        untilBuild.set("241.*")
+        untilBuild.set("242.*")
     }
 
     publishPlugin {
@@ -44,7 +44,6 @@ tasks {
         }
         from("src/main/resources/conf.sh") {
             filter<ReplaceTokens> ("tokens" to mapOf("ATTACHME_VERSION" to version.toString()))
-//            expand(mapOf("ATTACHME_VERSION" to version))
         }
         duplicatesStrategy = DuplicatesStrategy.INCLUDE
     }
