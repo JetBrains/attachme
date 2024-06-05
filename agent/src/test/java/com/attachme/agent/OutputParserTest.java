@@ -22,7 +22,7 @@ public class OutputParserTest {
   }
 
   @Test
-  public void windowsTest() throws InterruptedException {
+  public void windowsTest() {
     String[] lines = new String[]{
       "Active Connections\n",
       "\n",

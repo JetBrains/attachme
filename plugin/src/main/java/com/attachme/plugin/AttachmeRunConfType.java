@@ -1,40 +1,26 @@
 package com.attachme.plugin;
 
-import com.intellij.execution.configurations.ConfigurationFactory;
-import com.intellij.execution.configurations.ConfigurationType;
+import com.intellij.execution.configurations.RunConfiguration;
+import com.intellij.execution.configurations.SimpleConfigurationType;
 import com.intellij.icons.AllIcons;
-import org.jetbrains.annotations.Nls;
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.NotNullLazyValue;
 import org.jetbrains.annotations.NotNull;
 
-import javax.swing.*;
 
+public class AttachmeRunConfType extends SimpleConfigurationType {
 
-public class AttachmeRunConfType implements ConfigurationType {
-  @NotNull
-  @Override
-  public String getDisplayName() {
-    return "Attachme debugger registry";
-  }
+  private static final String name = "Attachme Debugger Registry";
 
-  @Nls
-  @Override
-  public String getConfigurationTypeDescription() {
-    return getDisplayName();
+  protected AttachmeRunConfType() {
+    super("ATTACHME_RUN_CONFIG",
+          name,
+          name,
+          NotNullLazyValue.createConstantValue(AllIcons.Debugger.AttachToProcess));
   }
 
   @Override
-  public Icon getIcon() {
-    return AllIcons.Debugger.AttachToProcess;
-  }
-
-  @NotNull
-  @Override
-  public String getId() {
-    return "ATTACHME_RUN_CONFIG";
-  }
-
-  @Override
-  public ConfigurationFactory[] getConfigurationFactories() {
-    return new AttachmeRunFactory[]{new AttachmeRunFactory(this)};
+  public @NotNull RunConfiguration createTemplateConfiguration(@NotNull Project project) {
+    return new AttachmeRunConfig(project, this, name);
   }
 }

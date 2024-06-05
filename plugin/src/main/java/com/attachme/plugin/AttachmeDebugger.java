@@ -71,7 +71,7 @@ public class AttachmeDebugger {
 
     @Nullable
     @Override
-    public RunProfileState getState(@NotNull Executor executor, @NotNull ExecutionEnvironment environment) throws ExecutionException {
+    public RunProfileState getState(@NotNull Executor executor, @NotNull ExecutionEnvironment environment) {
       if (connection == null) throw new NullPointerException();
       return new RemoteStateState(getProject(), connection);
     }

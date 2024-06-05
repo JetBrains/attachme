@@ -1,6 +1,6 @@
 package com.attachme.plugin;
 
-import com.intellij.ide.plugins.PluginManager;
+import com.intellij.ide.plugins.PluginManagerCore;
 import com.intellij.openapi.extensions.PluginId;
 import com.intellij.openapi.util.io.FileUtil;
 
@@ -60,15 +60,16 @@ public class AttachmeInstaller {
 
 
   private void printHelp() {
-    String help = "\n" +
-      "****************************  Instructions ****************************\n" +
-      "To auto-attach the debugger please execute these commands in your shell interpreter\n" +
-      "\t$ source ~/.attachme/conf.sh\n" +
-      "\t$ java com.example.MyApp\n" +
-      "In case you want to modify the port of AttachMe or java debugger (JDWP) arguments\n" +
-      "\t$ JDWP_ARGS=\"transport=dt_socket,server=y,suspend=y,address=127.0.0.1:0\" AM_PORT=9009 source ~/.attachme/conf.sh\n" +
-      "For more details, questions or bug reports refer to https://github.com/JetBrains/attachme/\n" +
-      "***********************************************************************\n";
+    String help = """
+      ****************************  Instructions ****************************
+      To auto-attach the debugger please execute these commands in your shell interpreter
+      \t$ source ~/.attachme/conf.sh
+      \t$ java com.example.MyApp
+      In case you want to modify the port of AttachMe or java debugger (JDWP) arguments
+      \t$ JDWP_ARGS="transport=dt_socket,server=y,suspend=y,address=127.0.0.1:0" AM_PORT=9009 source ~/.attachme/conf.sh
+      For more details, questions or bug reports refer to https://github.com/JetBrains/attachme/
+      ***********************************************************************
+      """;
     log.info(help);
   }
 
@@ -79,7 +80,7 @@ public class AttachmeInstaller {
   }
 
   private String packedJarName() {
-    String version = Objects.requireNonNull(PluginManager.getPlugin(PluginId.getId("com.attachme")),
+    String version = Objects.requireNonNull(PluginManagerCore.getPlugin(PluginId.getId("com.attachme")),
                                             "Plugin version cannot be null").getVersion();
     return String.format("attachme-agent-%s.jar", version);
   }

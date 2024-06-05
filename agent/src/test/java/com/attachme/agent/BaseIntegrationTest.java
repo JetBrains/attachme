@@ -12,7 +12,7 @@ public abstract class BaseIntegrationTest {
   final CountDownLatch latch;
   boolean allPortsNonEmpty = true;
 
-  AttachmeServer.Listener listener = new AttachmeServer.Listener() {
+  private final AttachmeServer.Listener listener = new AttachmeServer.Listener() {
 
     @Override
     public void onDebuggeeProcess(ProcessRegisterMsg msg, String debuggeeAddress) {

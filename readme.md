@@ -2,11 +2,11 @@
 
 ## AttachMe - IntelliJ debugger plugin
 
-- AttachMe will attach the IntelliJ debugger automatically even if you start your app from terminal (or any other way).
+- AttachMe will attach the IntelliJ debugger automatically even if you start your app from the terminal (or any other way).
 You don't need to trigger `Attach to process` action manually.
 - If you have a complex process hierarchy with many parent/child processes,
 AttachMe can auto-attach to all the newly forked child JVM processes.
-The behaviour will be similar to `set follow-fork-mode child` in the GDB debugger.
+The behavior will be similar to `set follow-fork-mode child` in the GDB debugger.
 
 
 ![](demo.gif)
@@ -29,7 +29,7 @@ java com.example.MyApp # anything that runs on the JVM
 Now you should see a new debugger window attached to the process and any of its child processes.
 
   
-If you want to have custom JDWP or AttachMe port configuration, you can run it like this:
+If you want to have a custom JDWP or AttachMe port configuration, you can run it like this:
 
 ```
 JDWP_ARGS="transport=dt_socket..." AM_PORT=9009 source ~/.attachme/conf.sh
@@ -53,4 +53,4 @@ To fix it, try to configure AttachMe with port address 127.0.0.1, like this:
 JDWP_ARGS="transport=dt_socket,server=y,suspend=y,address=127.0.0.1:0" source ~/.attachme/conf.sh
 ```
 
-AttachMe is not compatible with the JMX agent. If you are having problems running it with the auto generated SpringBoot run configuration, most likely disabling JMX will fix the problem.
+AttachMe is not compatible with the JMX agent. If you are having problems running it with the auto-generated SpringBoot run configuration, most likely disabling JMX will fix the problem.

@@ -13,7 +13,7 @@ repositories {
 
 
 dependencies {
-    testImplementation('junit:junit:4.12')
+    testImplementation('junit:junit:4.13.1')
     testImplementation('com.spotify:docker-client:8.16.0')
 }
 

@@ -6,7 +6,7 @@ import java.util.regex.Pattern;
 
 public class UnixHandler extends PortCommandHandler {
 
-  Pattern p = Pattern.compile(":([0-9]+)\\s\\(LISTEN\\)");
+  private final Pattern p = Pattern.compile(":([0-9]+)\\s\\(LISTEN\\)");
 
   @Override
   Function<String, Optional<Integer>> outputParser(int pid) {

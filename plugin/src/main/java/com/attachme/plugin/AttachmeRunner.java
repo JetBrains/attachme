@@ -21,9 +21,9 @@ import java.io.OutputStream;
 
 public class AttachmeRunner implements RunProfileState, AttachmeServer.Listener {
 
-  final Project project;
-  final AttachmeRunConfig runConf;
-  MProcHandler procHandler;
+  private final Project project;
+  private final AttachmeRunConfig runConf;
+  private MProcHandler procHandler;
 
   public AttachmeRunner(AttachmeRunConfig attachmeRunConfig, Project project) {
     this.project = project;
@@ -60,7 +60,7 @@ public class AttachmeRunner implements RunProfileState, AttachmeServer.Listener 
   @Override
   public void onDebuggeeProcess(ProcessRegisterMsg msg, String debuggeeAddress) {
     if (msg.getPorts().isEmpty()) {
-      procHandler.notifyTextAvailable("Receieved message with no ports", ProcessOutputType.STDERR);
+      procHandler.notifyTextAvailable("Received message with no ports", ProcessOutputType.STDERR);
       return;
     }
     RemoteConnection config = new RemoteConnection(true, debuggeeAddress, msg.getPorts().get(0) + "", false);

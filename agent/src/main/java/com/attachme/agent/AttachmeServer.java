@@ -5,7 +5,6 @@ import java.io.*;
 import java.net.BindException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.InetSocketAddress;
 
 public class AttachmeServer implements Runnable {
 
@@ -81,19 +80,7 @@ public class AttachmeServer implements Runnable {
   }
 
   public interface Listener {
-    Listener dummy = new Listener() {
-      @Override
-      public void onDebuggeeProcess(ProcessRegisterMsg msg, String debuggeeAddress) {
-
-      }
-
-      @Override
-      public void onFinished() {
-
-      }
-    };
     void onDebuggeeProcess(ProcessRegisterMsg msg, String debuggeeAddress);
-
     void onFinished();
   }
 
