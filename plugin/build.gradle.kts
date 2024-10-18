@@ -6,10 +6,12 @@ plugins {
 }
 
 group = "com.attachme"
-version = "1.2.8"
+version = "1.2.9"
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_17
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(17))
+    }
 }
 
 repositories {
@@ -29,8 +31,8 @@ intellij {
 tasks {
     patchPluginXml {
         changeNotes.set("")
-        sinceBuild.set("242")
-        untilBuild.set("242.*")
+        sinceBuild.set("243")
+        untilBuild.set("243.*")
     }
 
     publishPlugin {
