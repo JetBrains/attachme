@@ -1,38 +1,44 @@
 import org.apache.tools.ant.filters.ReplaceTokens
+import org.jetbrains.intellij.platform.gradle.extensions.intellijPlatform
 
 plugins {
-    id("org.jetbrains.intellij") version "1.17.3"
+    id("org.jetbrains.intellij.platform") version "2.2.1"
     id("java")
 }
 
 group = "com.attachme"
-version = "1.2.9"
+version = "1.2.10"
 
 java {
     toolchain {
-        languageVersion.set(JavaLanguageVersion.of(17))
+        languageVersion.set(JavaLanguageVersion.of(21))
     }
 }
 
 repositories {
     mavenCentral()
+
+    intellijPlatform {
+        defaultRepositories()
+    }
+}
+
+dependencies {
+    intellijPlatform {
+        intellijIdeaCommunity("251.14649.49")
+        bundledPlugin("com.intellij.java")
+    }
 }
 
 dependencies {
     implementation(project(":agent"))
 }
 
-// See https://plugins.jetbrains.com/docs/intellij/tools-gradle-intellij-plugin.html
-intellij {
-    plugins.set(listOf("java"))
-    version.set("LATEST-EAP-SNAPSHOT")
-}
-
 tasks {
     patchPluginXml {
         changeNotes.set("")
-        sinceBuild.set("243")
-        untilBuild.set("243.*")
+        sinceBuild.set("251")
+        untilBuild.set("251.*")
     }
 
     publishPlugin {
@@ -41,7 +47,7 @@ tasks {
 
     processResources {
         dependsOn(":agent:build")
-        from("${project(":agent").buildDir}/libs") {
+        from("${project(":agent").layout.buildDirectory}/libs") {
             rename("attachme-agent.jar", "attachme-agent-${version}.jar")
         }
         from("src/main/resources/conf.sh") {
