@@ -45,14 +45,25 @@ tasks {
         token.set(System.getenv("ATTACHME_PUBLISH_TOKEN"))
     }
 
-    processResources {
+    named<ProcessResources>("processResources") {
         dependsOn(":agent:build")
-        from("${project(":agent").layout.buildDirectory}/libs") {
+
+        // Explicitly declare inputs and outputs
+        inputs.files(fileTree("src/main/resources/conf.sh"))
+        inputs.files(project(":agent").layout.buildDirectory.dir("libs"))
+        inputs.property("version", version)
+
+        outputs.dir(layout.buildDirectory.dir("resources/main"))
+
+        // Task configuration
+        from(project(":agent").layout.buildDirectory.dir("libs")) {
             rename("attachme-agent.jar", "attachme-agent-${version}.jar")
         }
+
         from("src/main/resources/conf.sh") {
-            filter<ReplaceTokens> ("tokens" to mapOf("ATTACHME_VERSION" to version.toString()))
+            filter<ReplaceTokens>(mapOf("tokens" to mapOf("ATTACHME_VERSION" to version.toString())))
         }
+
         duplicatesStrategy = DuplicatesStrategy.INCLUDE
     }
 
