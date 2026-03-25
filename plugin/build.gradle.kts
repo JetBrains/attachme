@@ -2,7 +2,7 @@ import org.apache.tools.ant.filters.ReplaceTokens
 import org.jetbrains.intellij.platform.gradle.extensions.intellijPlatform
 
 plugins {
-    id("org.jetbrains.intellij.platform") version "2.7.0"
+    id("org.jetbrains.intellij.platform") version "2.13.1"
     id("java")
 }
 
@@ -25,7 +25,7 @@ repositories {
 
 dependencies {
     intellijPlatform {
-        intellijIdeaCommunity("2025.2")
+        intellijIdea("2025.3.2")
         bundledPlugin("com.intellij.java")
     }
 }
@@ -37,8 +37,8 @@ dependencies {
 tasks {
     patchPluginXml {
         changeNotes.set("")
-        sinceBuild.set("252")
-        untilBuild.set("252.*")
+        sinceBuild.set("253")
+        untilBuild.set("253.*")
     }
 
     publishPlugin {
@@ -68,4 +68,3 @@ tasks {
     }
 
 }
-
